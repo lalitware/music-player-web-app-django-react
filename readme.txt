@@ -279,6 +279,48 @@ Steps:
       iii. run 'npm install'
       iv. npm run dev
       v. npm run build
+    q. domain set up:
+      a. create a reserved ip for the droplet.
+      b. create A record in DNS settings and point the domain to reserved ip.
+    r. Set up the webserver to listen to port 80. With site is accessible without specifying the port number:
+      a. currently reserved_ip:8000 is the only way to access the site.
+      b. sudo apt update
+      c. sudo apt install nginx
+      d. to allow access to the service. Nginx registers itself as a service with ufw:
+        i. sudo ufw app list
+        ii. sudo ufw allow 'Nginx HTTP' -> to allow http traffic on port 80.
+        iii. sudo ufw status
+        iv. 'systemctl status nginx' -> check status of web server
+        v. 'curl -4 icanhazip.com' -> to get public ip address
+        vi. 'curl http://your_public_ip' -> it show return a page.
+      e. set up Gunicorn:
+        i. pip install gunicorn
+        ii. gunicorn --bind 0.0.0.0:8000 <project-name>.wsgi -> to test Gunicorn.
+      f. set up nginx config:
+        i. Create an Nginx server block configuration file: 
+          sudo nano /etc/nginx/sites-available/<project-name>
+        ii. paste this and update the ip or domain:
+          server {
+              listen 80;
+              server_name <your-domain-or-ip>;
+
+              location / {
+                  proxy_pass http://localhost:8000;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              }
+          }
+        iii. Create a symbolic link for the server block: 
+          sudo ln -s /etc/nginx/sites-available/<project-name> /etc/nginx/sites-enabled/
+        iv. test Nginx configuration:
+          sudo nginx -t
+        v. Restart Nginx:
+          sudo systemctl restart nginx
+      g. cd to project, activate the environment, and run the server
+        'python manage.py runserver 0.0.0.0:8000'
+      h. add the domain to ALLOWED_HOSTS in settings.py 
+
 
 
 

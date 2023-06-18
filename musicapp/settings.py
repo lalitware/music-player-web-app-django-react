@@ -24,9 +24,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = ['0.0.0.0:8000', '127.0.0.1', config('RESERVED_IP'), config('LOCAL_MACHINE_PUBLIC_IP')]
+ALLOWED_HOSTS = [
+    '0.0.0.0:8000',
+    '127.0.0.1',
+    config('PRODUCTION_DOMAIN'),
+    config('RESERVED_IP'),
+    config('LOCAL_MACHINE_PUBLIC_IP'),
+]
 
 
 # Application definition
