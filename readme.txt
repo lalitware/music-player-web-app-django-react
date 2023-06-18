@@ -238,6 +238,8 @@ Steps:
     d. get the variables using config methods.
   3. Create .gitignore file for django from gitignore.io
   4. Create github repository and push the code to github.
+  5. Create DigitalOcean droplet uisng ubuntu machine.
+  6. 
 
 
 
