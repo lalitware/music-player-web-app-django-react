@@ -239,7 +239,41 @@ Steps:
   3. Create .gitignore file for django from gitignore.io
   4. Create github repository and push the code to github.
   5. Create DigitalOcean droplet uisng ubuntu machine.
-  6. 
+  6. choose ssh and generate public key:
+    a. Create a new key pair:
+      ssh-keygen
+    b. let the location be as it is and enter the passphrase for key
+    c. copy the public key and paste it to the ssh-key-content in droplet-> settings-> security->edit
+      cat ~/.ssh/id_rsa.pub
+    d. save the ssh key
+    e. open local machine terminal and check if ~/.ssh/id_rsa has only one
+    f. run 'ssh root@ip-address' -> copy the ip address from droplet.
+    g. if the above command gives permission denied then do the following:
+      i. chmod 700 ~/.ssh
+      ii. chmod 600 ~/.ssh/*
+      iii. eval "$(ssh-agent -s)" -> To first start the ssh agent
+      iv. ssh-add -> To then add the ssh key
+      v. run 'ssh root@ip-address' again it should work.
+  7. Now Set up the environemnt:
+    a. sudo apt update
+    b. sudo apt upgrade
+    c. check python version
+    d. apt install nodejs
+    e. apt install python3-pip
+    f. apt install npm
+    g. Create new user:
+      i. adduser your_username
+      ii. usermod -aG sudo your_username -> Grant administrative privileges to the new user
+      iii. su - your_username -> Switch to the new user
+    h. connect with github ssh repeat the same steps as 6.
+    i. create directory sites
+    j. sudo apt install python3.10-venv
+    k. python3 -m venv env
+    l. source env/bin/activate
+    m. pip install -r requirements.txt
+    n. cp project directory and cp .env-sample .env and then nano .env to paste the secrets.
+    o. python manage.py migrate -> to create db tables.
+    i. install gunicorn -> 'pip install gunicorn'
 
 
 
