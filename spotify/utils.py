@@ -80,11 +80,10 @@ def refresh_spotify_token(token_data, session_id):
 # To send request to any spotify api endpoint.
 def execute_spotify_api_request(session_id, endpoint, is_post_request=False, is_put_request=False):
     token_data = get_user_token_data(session_id)
-    print(f"####### before if {token_data} ########")
+
+    # Check if token_data is not empty.
     if not token_data:
-        print(f"####### in if {token_data} ########")
-        return {'error': 'Issue with token', 'status': '500'}
-    print(f"####### after if {token_data} ########")
+        return {'error': 'Token data not found!', 'status': '500'}
     
     headers = {
         'Content-Type': 'application/json',
