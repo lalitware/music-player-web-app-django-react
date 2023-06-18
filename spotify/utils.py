@@ -8,9 +8,8 @@ from musicapp.settings import SPOTIFY_CLIENT_ID, SPOTIFY_SECRET_ID
 # Spotify api base url.
 SPOTIFY_BASE_URL = 'https://api.spotify.com/v1/me/'
 
+
 # To get the user token data corrsponding to session_id from db.
-
-
 def get_user_token_data(session_id):
     user_tokens = SpotifyToken.objects.filter(user=session_id)
     if user_tokens.exists():

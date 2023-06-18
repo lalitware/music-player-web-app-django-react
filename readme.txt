@@ -273,7 +273,12 @@ Steps:
     m. pip install -r requirements.txt
     n. cp project directory and cp .env-sample .env and then nano .env to paste the secrets.
     o. python manage.py migrate -> to create db tables.
-    i. install gunicorn -> 'pip install gunicorn'
+    p. fontend set up:
+      i. cd frontend
+      ii. delete node_modeles
+      iii. run 'npm install'
+      iv. npm run dev
+      v. npm run build
 
 
 

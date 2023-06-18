@@ -210,7 +210,6 @@ class SkipToNextSong(APIView):
 
                 # Skip the song.
                 response = skip_to_next_song(room.host)
-                print(f"############## {response} ##############")
                 if response.get('error'):
                     return Response({'message': response.get('error').get('message')}, status=response.get('error').get('status'))
                 else:
