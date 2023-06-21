@@ -42,10 +42,10 @@ function MusicPlayer(props) {
     return (
       <Card>
         <Grid container alignItems="center">
-          <Grid item align="center" xs={4}>
+          <Grid item xs={12} md={4} align="center">
             <img src={image} height="100%" width="100%" />
           </Grid>
-          <Grid item align="center" xs={8}>
+          <Grid item xs={12} md={8} align="center">
             <Typography component="h7" variant="h7">
               {props.message}
             </Typography>
@@ -57,10 +57,10 @@ function MusicPlayer(props) {
     return (
       <Card>
         <Grid container alignItems="center">
-          <Grid item align="center" xs={4}>
+          <Grid item xs={12} md={4} align="center">
             <img src={props.image_url} height="100%" width="100%" />
           </Grid>
-          <Grid item align="center" xs={8}>
+          <Grid item xs={12} md={8} align="center">
             <Typography component="h5" variant="h5">
               {props.title}
             </Typography>

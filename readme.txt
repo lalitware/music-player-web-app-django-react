@@ -4,9 +4,8 @@ Youtube link: https://www.youtube.com/playlist?list=PLzMcBGfZo4-kCLWnGmK0jUBmGLa
 github link: https://github.com/techwithtim/Music-Controller-Web-App-Tutorial 
 
 Fetaures: 
-  a. To create a music room where the people in the room will be able to control the music.
+  a. To create a music room where the people in the room will be able to control the music player of the host.
   b. Room will be joined using the room code.
-  c. 
 
 Steps:
   1. vscode extensions -> prettier(prettier.io), python(microsoft), django(Baptiste Darthenay), react(dsznajder), javascript(charalampos karypidis)
@@ -319,7 +318,93 @@ Steps:
           sudo systemctl restart nginx
       g. cd to project, activate the environment, and run the server
         'python manage.py runserver 0.0.0.0:8000'
-      h. add the domain to ALLOWED_HOSTS in settings.py 
+      h. add the domain to ALLOWED_HOSTS in settings.py
+    
+    ########## Method 1(tmux) to keep Gunicorn run ##############
+    s. To keep Gunicorn run after even after closing the ssh terminal:
+      i. install tmux -> 'sudo apt install tmux'
+      ii. start tmux session -> 'tmux'
+      iii. navigate to project and activate the environment
+      iv. gunicorn --bind 0.0.0.0:8000 myproject.wsgi:application --daemon
+      v. Detach from the tmux session:
+        press 'Ctrl+B' and then release and then press 'D'
+      vi to stop other running tmux sessions:
+        a. tmux
+        b. ps aux | grep gunicorn
+        c. kill <PID>
+        d. exit
+    ########## Method 2(systemd socket and service) to keep Gunicorn run ##############
+    https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-20-04 
+    t. To keep Gunicorn run after even after closing the ssh terminal:
+      a. creating and opening a systemd socket file:
+        sudo nano /etc/systemd/system/gunicorn.socket
+
+        Paste below lines
+        [Unit]
+        Description=gunicorn socket
+
+        [Socket]
+        ListenStream=/run/gunicorn.sock
+
+        [Install]
+        WantedBy=sockets.target
+      b. create and open a systemd service file for Gunicorn
+        sudo nano /etc/systemd/system/gunicorn.service
+
+        paste the below lines.
+        [Unit]
+        Description=gunicorn daemon
+        Requires=gunicorn.socket
+        After=network.target
+
+        [Service]
+        User=sammy
+        Group=www-data
+        WorkingDirectory=/home/sammy/myprojectdir
+        ExecStart=/home/sammy/myprojectdir/myprojectenv/bin/gunicorn \
+                  --access-logfile - \
+                  --workers 3 \
+                  --bind unix:/run/gunicorn.sock \
+                  myproject.wsgi:application
+
+        [Install]
+        WantedBy=multi-user.target
+      c. start and enable the Gunicorn socket:
+        sudo systemctl start gunicorn.socket
+        sudo systemctl enable gunicorn.socket
+      d. Check the status of the process to find out whether it was able to start
+        sudo systemctl status gunicorn.socket
+      e. check for the existence of the gunicorn.sock file within the /run directory:
+        file /run/gunicorn.sock
+        expected output -> /run/gunicorn.sock: socket
+      f. To test the socket activation mechanism, we can send a connection to the socket through curl by typing:
+        curl --unix-socket /run/gunicorn.sock localhost
+
+        expected output: html page.
+      g. configure nginx:
+        i. sudo nano /etc/nginx/sites-available/myproject:
+          server {
+              listen 80;
+              server_name server_domain_or_IP;
+
+              location = /favicon.ico { access_log off; log_not_found off; }
+              location /static/ {
+                  root /home/sammy/myprojectdir;
+              }
+
+              location / {
+                  include proxy_params;
+                  proxy_pass http://unix:/run/gunicorn.sock;
+              }
+          }
+        ii. enable the file by linking it to the sites-enabled directory:
+          sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
+        iii. make sure to have +x permission:
+          sudo chmod +x /home
+          sudo chmod +x /home/user_name
+          sudo chmod +x /home/user_name/path/to/project/directory
+          sudo chmod +x /home/user_name/path/to/project/directory/frontend
+        iv. sudo systemctl restart nginx
 
 
 
