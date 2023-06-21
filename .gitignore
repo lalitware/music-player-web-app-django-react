@@ -174,4 +174,5 @@ cython_debug/
 # End of https://www.toptal.com/developers/gitignore/api/django
 
 frontend/static/frontend/main.js
+frontend/static/frontend/main.js.LICENSE.txt
 frontend/node_modules
