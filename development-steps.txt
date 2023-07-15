@@ -337,19 +337,19 @@ Steps:
     https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-20-04 
     t. To keep Gunicorn run after even after closing the ssh terminal:
       a. creating and opening a systemd socket file:
-        sudo nano /etc/systemd/system/gunicorn.socket
+        sudo nano /etc/systemd/system/gunicorn-musicapp.socket
 
         Paste below lines
         [Unit]
         Description=gunicorn socket
 
         [Socket]
-        ListenStream=/run/gunicorn.sock
+        ListenStream=/run/gunicorn-musicapp.sock
 
         [Install]
         WantedBy=sockets.target
       b. create and open a systemd service file for Gunicorn
-        sudo nano /etc/systemd/system/gunicorn.service
+        sudo nano /etc/systemd/system/gunicorn-musicapp.service
 
         paste the below lines.
         [Unit]
@@ -364,7 +364,7 @@ Steps:
         ExecStart=/home/sammy/myprojectdir/myprojectenv/bin/gunicorn \
                   --access-logfile - \
                   --workers 3 \
-                  --bind unix:/run/gunicorn.sock \
+                  --bind unix:/run/gunicorn-musicapp.sock \
                   myproject.wsgi:application
 
         [Install]

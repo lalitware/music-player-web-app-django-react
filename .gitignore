@@ -176,3 +176,5 @@ cython_debug/
 frontend/static/frontend/main.js
 frontend/static/frontend/main.js.LICENSE.txt
 frontend/node_modules
+
+deployment-steps.md
